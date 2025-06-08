@@ -1,15 +1,10 @@
-// components/Header.tsx (Server Component)
+// components/Header.tsx
 import Image from 'next/image';
 import Link from 'next/link';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import { User } from 'lucide-react';
-import MobileViewLink from '@/components/MobileViewLink';
-import { signOut } from 'next-auth/react';
+import MobileViewLink from '@/components/Header/MobileViewLink';
+import React from 'react';
 
 export default async function Header() {
-    const session = await getServerSession(authOptions);
-
     const navLinks = [
         { href: '/', label: 'Home' },
         { href: '/marketplace', label: 'Marketplace' },
@@ -27,17 +22,18 @@ export default async function Header() {
                     <Image
                         src="/triangle_logo.svg"
                         alt="Prayas-Sankalp logo"
-                        width={40}
+                        width={55}
                         height={23}
+                        style={{ width: '55px', height: 'auto' }}
                         priority
                     />
-                    <h1 className="text-lg md:text-2xl font-medium">
+                    <h1 className="text-lg md:text-lg lg:text-lg font-medium">
                         Prayas-Sankalp
                     </h1>
                 </div>
 
                 {/* Desktop Navigation */}
-                <nav className="hidden md:flex gap-6 text-sm font-medium">
+                <nav className="hidden md:flex gap-4 text-[10px] lg:text-sm font-medium overflow-hidden">
                     {navLinks.map(({ href, label }) => (
                         <Link
                             key={href}
@@ -49,30 +45,7 @@ export default async function Header() {
                     ))}
                 </nav>
 
-                {/* Auth / Profile */}
-                <div className="hidden md:flex gap-4 items-center">
-                    {session?.user ? (
-                        <>
-                            <div className="flex items-center gap-2 px-4 py-2 bg-white/10 text-sm rounded-md">
-                                <User size={18} />
-                                <span>
-                                    {session.user.name || session.user.email}
-                                </span>
-                            </div>
-                            <form
-                                action={async () => {
-                                    'use server';
-
-                                    await signOut();
-                                }}
-                            >
-                                <button type="submit">Logout</button>
-                            </form>
-                        </>
-                    ) : (
-                        <MobileViewLink session={session} />
-                    )}
-                </div>
+                <MobileViewLink />
             </div>
         </header>
     );

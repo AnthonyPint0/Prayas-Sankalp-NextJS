@@ -48,7 +48,7 @@ export async function POST(req: Request) {
 
     try {
         await connectToDatabase();
-        const existingUser = await User.findOne({ where: { email: email } });
+        const existingUser = await User.findOne({ email: email });
         if (existingUser) {
             return NextResponse.json(
                 { message: 'User already exists' },
@@ -70,6 +70,9 @@ export async function POST(req: Request) {
             { status: 201 }
         );
     } catch (error) {
-        return NextResponse.json({ message: 'Something went wrong' });
+        return NextResponse.json(
+            { message: 'Something went wrong' },
+            { status: 500 }
+        );
     }
 }
